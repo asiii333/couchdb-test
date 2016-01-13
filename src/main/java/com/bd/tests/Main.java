@@ -3,7 +3,6 @@ package com.bd.tests;
 import com.bd.tests.couchdb.CouchDbManager;
 import com.bd.tests.data.DbManager;
 import com.bd.tests.data.ExperimentResult;
-import com.bd.tests.inmemory.InMemoryDbManager;
 import com.bd.tests.simulation.Simulation;
 
 /**

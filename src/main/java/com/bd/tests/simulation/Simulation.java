@@ -1,7 +1,6 @@
 package com.bd.tests.simulation;
 
 import com.bd.tests.data.*;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +34,7 @@ public class Simulation {
 
         long start = System.nanoTime();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             Record record = Record.newRandom(new Date().getTime());
             Callable<TaskResult> task = manager.returnInsertTask(record);
             Future<TaskResult> result = executorService.submit(task);
@@ -86,11 +85,11 @@ public class Simulation {
 
         long start = System.nanoTime();
 
-        for (int i = 0; i < 40000; i++) {
-            Callable<TaskResult> task = manager.returnQueryTask(Integer.toString(i));
+        //for (int i = 0; i < 40000; i++) {
+            Callable<TaskResult> task = manager.returnAll();
             Future<TaskResult> result = executorService.submit(task);
             results.add(result);
-        }
+        //}
 
         executorService.shutdown();
         long stop = System.nanoTime();
@@ -201,13 +200,13 @@ public class Simulation {
 
         double averageTime = sum / 40000.0;*/
 
-        double recordsPerSecond = 10.0 / total * 1000000.0;
+        double recordsPerSecond = 1000.0 / total * 1000000.0;
         double sum = finalResults.stream().mapToDouble(TaskResult::getDuration).sum();
 
         double[] doubles = finalResults.stream().mapToDouble(TaskResult::getDuration).sorted().toArray();
-        double median = (doubles[4] + doubles[5]) / 2.0;
+        double median = (doubles[499] + doubles[500]) / 2.0;
 
-        double averageTime = sum / 10.0;
+        double averageTime = sum / 1000.0;
 
         return new ExperimentResult(recordsPerSecond, averageTime, min.getDuration(), max.getDuration(), median, connections);
     }

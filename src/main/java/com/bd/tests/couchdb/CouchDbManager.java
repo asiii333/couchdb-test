@@ -4,7 +4,10 @@ import com.bd.tests.data.DbManager;
 import com.bd.tests.data.Record;
 import com.bd.tests.data.RecordRepository;
 import com.bd.tests.data.TaskResult;
+import org.ektorp.DocumentNotFoundException;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -44,9 +47,28 @@ public class CouchDbManager implements DbManager {
     public Callable<TaskResult> returnQueryTask(long timestamp) {
         return () -> {
             long start = System.nanoTime();
-            //data.get(timestamp);
+            try{
+                data.findByTimeStamp(timestamp);
+            }catch(DocumentNotFoundException e){
+                //donothing
+            }
+
             long stop = System.nanoTime();
             return new TaskResult(stop - start);
         };
+    }
+
+    @Override
+    public Callable<TaskResult> returnAll() {
+        return () -> {
+            long start = System.nanoTime();
+            data.getAll();
+            long stop = System.nanoTime();
+            return new TaskResult(stop - start);
+        };
+    }
+
+    public List<Record> getAllDocument(){
+        return data.getAll();
     }
 }

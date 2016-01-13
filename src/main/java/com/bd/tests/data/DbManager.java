@@ -1,5 +1,6 @@
 package com.bd.tests.data;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -14,4 +15,7 @@ public interface DbManager {
     Callable<TaskResult> returnQueryTask(String id);
 
     Callable<TaskResult> returnQueryTask(long timestamp);
+    Callable<TaskResult> returnAll();
+
+    List<Record> getAllDocument();
 }

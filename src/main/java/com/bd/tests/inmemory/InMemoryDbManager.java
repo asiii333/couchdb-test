@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author majaschaefer
  */
-public class InMemoryDbManager implements DbManager {
+public abstract class InMemoryDbManager implements DbManager {
 
     private final Map<String, Record> data = new ConcurrentHashMap<String, Record>();
 
