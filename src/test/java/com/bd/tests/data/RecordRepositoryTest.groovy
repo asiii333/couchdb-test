@@ -16,4 +16,12 @@ class RecordRepositoryTest extends Specification {
         then:
             true;
     }
+
+    def "get all"() {
+        when:
+        List<Record> result = repo.getAll();
+        then:
+        result.size() > 0;
+
+    }
 }

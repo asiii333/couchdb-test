@@ -34,7 +34,7 @@ public class Simulation {
 
         long start = System.nanoTime();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1000; i++) {
             Record record = Record.newRandom(new Date().getTime());
             Callable<TaskResult> task = manager.returnInsertTask(record);
             Future<TaskResult> result = executorService.submit(task);
@@ -79,7 +79,7 @@ public class Simulation {
     public ExperimentResult startExperimentTwo(int connectionsCount) {
         ExecutorService executorService = Executors.newFixedThreadPool(connectionsCount);
 
-        startExperimentOne(1);
+        //startExperimentOne(1);
 
         List<Future<TaskResult>> results = new ArrayList<>();
 
@@ -94,7 +94,7 @@ public class Simulation {
         executorService.shutdown();
         long stop = System.nanoTime();
 
-        return calculateResults(start, stop, results, connectionsCount);
+        return calculateResultsExTwo(start, stop, results, connectionsCount);
     }
 
     /**
@@ -103,7 +103,7 @@ public class Simulation {
     public ExperimentResult startExperimentTwoExt(int connectionsCount) {
         ExecutorService executorService = Executors.newFixedThreadPool(connectionsCount);
 
-        startExperimentOne(1);
+        //startExperimentOne(1);
 
         List<Future<TaskResult>> results = new ArrayList<>();
 
@@ -176,7 +176,6 @@ public class Simulation {
 
     }
 
-
     private ExperimentResult calculateResults(long start, long stop, List<Future<TaskResult>> results, int connections) {
         List<TaskResult> finalResults = results.stream().map(future -> {
             try {
@@ -192,14 +191,6 @@ public class Simulation {
 
         double total = (stop - start);
 
-        /*double recordsPerSecond = 40000.0 / total * 1000000.0;
-        double sum = finalResults.stream().mapToDouble(TaskResult::getDuration).sum();
-
-        double[] doubles = finalResults.stream().mapToDouble(TaskResult::getDuration).sorted().toArray();
-        double median = (doubles[19999] + doubles[20000]) / 2.0;
-
-        double averageTime = sum / 40000.0;*/
-
         double recordsPerSecond = 1000.0 / total * 1000000.0;
         double sum = finalResults.stream().mapToDouble(TaskResult::getDuration).sum();
 
@@ -207,6 +198,32 @@ public class Simulation {
         double median = (doubles[499] + doubles[500]) / 2.0;
 
         double averageTime = sum / 1000.0;
+
+        return new ExperimentResult(recordsPerSecond, averageTime, min.getDuration(), max.getDuration(), median, connections);
+    }
+
+    private ExperimentResult calculateResultsExTwo(long start, long stop, List<Future<TaskResult>> results, int connections) {
+        List<TaskResult> finalResults = results.stream().map(future -> {
+            try {
+                return future.get(5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+
+
+        TaskResult min = finalResults.stream().min(new InsertResultComparator()).orElse(new TaskResult(0));
+        TaskResult max = finalResults.stream().max(new InsertResultComparator()).orElse(new TaskResult(0));
+
+        double total = (stop - start);
+
+        double recordsPerSecond = 2000.0 / total * 1000000.0;
+        double sum = finalResults.stream().mapToDouble(TaskResult::getDuration).sum();
+
+        //double[] doubles = finalResults.stream().mapToDouble(TaskResult::getDuration).sorted().toArray();
+        double median = total/2000.0;
+
+        double averageTime = total / 2000.0;
 
         return new ExperimentResult(recordsPerSecond, averageTime, min.getDuration(), max.getDuration(), median, connections);
     }

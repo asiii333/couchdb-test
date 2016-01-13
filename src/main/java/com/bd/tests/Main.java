@@ -14,8 +14,8 @@ public class Main {
         DbManager inMemoryDbManager = new CouchDbManager();
         Simulation simulation = new Simulation(inMemoryDbManager);
 
-        System.out.println("Experiment 1");
-        printResults(simulation.startExperimentOne(1));
+        //System.out.println("Experiment 1");
+        //printResults(simulation.startExperimentOne(1));
 //        printResults(simulation.startExperimentOne(2));
 ////        printResults(simulation.startExperimentOne(4));
 ////        printResults(simulation.startExperimentOne(8));
@@ -24,8 +24,8 @@ public class Main {
 ////        printResults(simulation.startExperimentOne(64));
 //
 //
-//        System.out.println("Experiment 2");
-//        printResults(simulation.startExperimentTwo(1));
+        System.out.println("Experiment 2");
+        printResults(simulation.startExperimentTwo(1));
 //        printResults(simulation.startExperimentTwo(2));
 ////        printResults(simulation.startExperimentTwo(4));
 ////        printResults(simulation.startExperimentTwo(8));
